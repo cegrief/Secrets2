@@ -1,0 +1,34 @@
+<ul ng-repeat="secret in ownedSecrets">
+    <li class="col-xs-4 secret">
+        <a onclick="" href="#/secretPage/{{secret.id}}" class="thumbnail">
+            <div class="imagecontainer"><img ng-src="{{secret.get('Image')}}"></div>
+            <div class="caption">
+                <span class="title">{{ secret.get("Secret") }}</span>
+                <hr>
+                <span><b>Summary: </b>{{ secret.get("Summary") }} </span>
+                <hr>
+                <span><b>Task: </b>{{ secret.get("conditionForSharingWithSomeoneElse") }}</span>
+                <hr>
+                <span><b>Submissions: </b>{{ secret.get("count") }} ({{secret.get("completedCount")}} approved)</span>
+            </div>
+        </a>
+        <button class="btn btn-default col-xs-6" style="margin-top:-20px" ng-click="edit(secret.id)">Edit</button>
+        <button class="btn btn-danger col-xs-6" style="margin-top:-20px" ng-click="delete(secret)">Delete</button>
+    </li>
+
+</ul>
+<table id = "ownedTable" class = "table table-striped table-bordered" hidden>
+    <thead>
+    <tr><th>Title</th><th>Location</th><th>Category</th><th>Summary</th><th>Task</th><th>Secret</th><th>Image</th><th>Submission Count</th></tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="secret in ownedSecrets">
+        <td>{{secret.get('Secret')}}</td>
+        <td>{{secret.get('secretLocation')}}</td>
+        <td>{{secret.get('Category')}}</td>
+        <td>{{secret.get('conditionForSharingWithSomeoneElse')}}</td>
+        <td><img ng-src="{{secret.get('image')}}"></td>
+        <td>{{secret.get('feedback')}}</td>
+    </tr>
+    </tbody>
+</table>

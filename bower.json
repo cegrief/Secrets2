@@ -1,0 +1,16 @@
+{
+  "name": "Secrets",
+  "description": "Secrets Angular Version",
+  "version": "0.0.0",
+  "homepage": "https://github.com/cegrief/Secrets2.0",
+  "private": true,
+  "dependencies": {
+    "angular": "1.2.x",
+    "angular-route": "1.2.x",
+    "angular-loader": "1.2.x",
+    "angular-mocks": "~1.2.x",
+    "angular-resource": "1.2.x",
+    "angular-sanitize": "1.2.x",
+    "html5-boilerplate": "~4.3.0"
+  }
+}

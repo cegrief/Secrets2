@@ -1,0 +1,83 @@
+/* app css stylesheet */
+
+.thumbnail{
+    padding:0;
+    height: 250px;
+    overflow:hidden;
+}
+.secret .imagecontainer{
+    max-height:125px;
+    overflow:hidden;
+}
+.secret img{
+    max-width:100%;
+}
+
+.secret .caption{
+    padding: 5px;
+}
+
+.secret{
+    overflow:hidden;
+}
+.secret .title{
+    font-size:large;
+}
+.secret hr{
+    -webkit-margin-before:1px;
+    -webkit-margin-after:1px
+}
+
+ul{
+    list-style:none;
+}
+
+.reviewimage{
+    width:10px;
+}
+
+.divider{
+    border-right:1px solid #ebeae5;
+}
+.navbar{
+    border-radius:0;
+    background-color: #fcfcfc;
+    border-bottom:1px solid #ebeae5
+}
+#secrets-tabs{
+    border:1px solid;
+}
+
+.imagecontainer{
+    max-height:100px;
+    overflow:hidden;
+}
+
+.validationbutton{
+    width:100px;
+}
+
+html,body { height:100%; }
+
+.sidebar{
+    padding-left:50px;
+    background-color:#ebeae5;
+}
+
+.submitbutton{
+    width:50%;
+}
+
+.jumbotron{
+    margin-left:-20px;
+    padding-top:5px;
+    padding-bottom:15px;
+}
+.visitbtn{
+    width:100%;
+    height:50px;
+}
+
+.yoursecret{
+    color:green;
+}

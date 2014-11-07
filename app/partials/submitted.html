@@ -1,0 +1,14 @@
+<table id = "submittedTable" class = "table table-striped table-bordered">
+    <thead>
+    <tr><th>Status</th><th>Title</th><th>Your Submission</th><th>Your Submission Image</th><th>Feedback</th></tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="secret in wantedSecrets">
+        <td>{{secret.get('done')}}</td>
+        <td>{{secret.get('secretID').get('Secret')}}</td>
+        <td>{{secret.get('submission')}}</td>
+        <td><img ng-src="{{secret.get('image')}}"></td>
+        <td>{{secret.get('feedback')}}</td>
+    </tr>
+    </tbody>
+</table>

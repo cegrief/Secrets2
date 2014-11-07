@@ -1,0 +1,82 @@
+<div ng-include = "src ='partials/navbar.html'"></div>
+
+<div class = "container">
+
+    <div class = "col-xs-6 divider" >
+        <p style = "color:red"><span class ="glyphicon glyphicon-lock" style="color:red"></span> - Kept Secret until the task is performed</p>
+        <p style = "color:green"><span class ="glyphicon glyphicon-globe" style="color:green"></span> - Displayed to the public
+        <form role="form" id ="myForm" autocomplete="off">
+            <div class="form-group">
+                <label for="title">Title  <span class ="glyphicon glyphicon-globe" style="color:green"></span></label>
+                <input ng-model="secret.title" type="text" class="form-control" id="title" placeholder="What is your secret about?" data-content="Great view of Chicago, Free Bagels at McCormick, Secret North-Campus Study Location, etc.">
+            </div>
+            <div class = "form-group">
+                <label for="category">Category  <span class ="glyphicon glyphicon-globe" style="color:green"></span></label>
+                <select ng-model="secret.category" class = "form-control" id="category" placeholder="Select a Category for your Secret">
+                    <option>Food</option>
+                    <option>Places</option>
+                    <option>Routes</option>
+                    <option>None of the Above</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="location">General Location  <span class ="glyphicon glyphicon-globe" style="color:green"></span></label>
+                <input ng-model = "secret.location" type="text" class="form-control" id="location" placeholder="Enter a general Location for your Secret" data-content="North Campus, Tech, Kresge, etc. Be careful not to give away the secret!">
+            </div>
+            <div class="form-group">
+                <label for="summary">Advertise your secret  <span class ="glyphicon glyphicon-globe" style="color:green"></span></label>
+                <textarea ng-model = "secret.description" class="form-control" id="summary" placeholder="Enter a description of your secret without giving it away"rows = "3" data-content="I know a place on campus to get tasty discounted food"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="taskdesc">Task  <span class ="glyphicon glyphicon-globe" style="color:green"></span></label>
+                <textarea ng-model="secret.task" class="form-control" id="taskdesc" placeholder="What task do people have to perform in order to know your secret? Be sure to specify what proof is required!" rows = "3" data-content="Go out and enjoy the fantastic weather by playing frisbee on the beach. Attach a picture of this and the secret is yours!<br/>
+		    	<b>Note: Submitters can only submit Text and picture proof</b>"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="picture">Photo  <span class ="glyphicon glyphicon-globe" style="color:green"></span></label>
+                <input type="file" id="picture">
+                <p class="help-block">Upload a picture to display for your Secret.</p>
+            </div>
+            <div class="form-group">
+                <label for="secret">Secret  <span class ="glyphicon glyphicon-lock" style="color:red"></span> - Kept Secret until the task is performed</label>
+                <textarea ng-model="secret.secret" class="form-control" id="secret" placeholder="Enter the actual secret (with spoilers!)"rows = "3" data-content="You can get free coffee or tea in most department offices"></textarea>
+
+            </div>
+        </form>
+        <button type="submit" class="btn btn-default btn-primary" ng-click= "submit()">Submit</button>
+    </div>
+    <div class = "col-xs-6">
+        <div>
+            <h1><strong>Preview</strong></h1>
+        </div>
+        <div class>
+            <h1 class = "mytitle">{{secret.title}}<span ng-hide="secret.title">Title</span></h1>
+            <ul id="project_navigation" class="nav nav-tabs">
+                <li class="active"><a href="#description" data-toggle="tab" tab-dir>Description</a></li>
+                <li><a href="#mytask" data-toggle="tab" tab-dir>Task</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="description">
+                    <br><p class="lead"><b>Category: </b><span id = "mycategory">{{secret.category}}</span></p>
+                    <p class="lead"><b>Location: </b><span class = "mylocation">{{secret.location}}</span></p>
+                    <p class = "lead"><b>Description: </b><span class = "mysummary">{{secret.description}}</span></p>
+                    <p class = "lead"><b>Task: </b><span class="mytaskdesc">{{secret.task}}</span></p>
+                </div>
+                <div class="tab-pane" id="mytask">
+                    <br>
+                    <p class = "lead"><b>Task: </b><span class="mytaskdesc">{{secret.task}}</span></p>
+                    <label for = "submission" class = "lead"><b>Submission:</b></label>
+                    <textarea class = 'form-control' id='submission'></textarea><br>
+                    <button type = "button" class = "btn btn-primary disabled">Submit</button>
+                </div><br>
+                <div class="tab-pane" id="submit">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-s-4 col-xs-4">
+        <img id = "pic" ng-src={{secret.image}} class = "img-thumbnail">
+    </div>
+</div>

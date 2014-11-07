@@ -1,0 +1,44 @@
+<div ng-include = "src ='partials/navbar.html'"></div>
+<div class = "container-fluid">
+    <div class = "col-xs-1"></div>
+    <div class = "col-xs-10">
+
+        <div class="alert alert-success alert-dismissable" hidden id="updatenotif">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong style = "align:center">Secret Updated</strong>
+        </div>
+
+        <div class="alert alert-success alert-dismissable" hidden id="approvenotif">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong style = "align:center">Submission Approved</strong>
+        </div>
+
+        <div class="alert alert-warning alert-dismissable" hidden id="denynotif">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong style = "align:center">Submission Denied</strong>
+        </div>
+
+        <ul class="nav nav-tabs nav-justified">
+            <li ng-class = "{active:isActive('/dashboard/known')}"><a href="#know" data-toggle="tab" tab-dir>Secrets You Know</a></li>
+            <li ng-class = "{active:isActive('/dashboard/submitted')}"><a href="#submitted" data-toggle="tab" tab-dir>Secrets you want to know</a></li>
+            <li ng-class = "{active:isActive('/dashboard/owned')}"><a href="#owned" data-toggle="tab" tab-dir>Secrets You Own</a></li>
+            <li ng-class = "{active:isActive('/dashboard/review')}"><a href="#review" data-toggle="tab" tab-dir>Review Submissions For Your Secrets</a></li>
+        </ul>
+        <br>
+        <div class = "tab-content">
+            <div class="tab-pane" ng-class = "{active:isActive('/dashboard/known')}" id="know">
+                <div ng-include ="src='partials/known.html'"></div>
+            </div>
+            <div class="tab-pane" ng-class = "{active:isActive('/dashboard/submitted')}" id="submitted">
+                <div ng-include="src='partials/submitted.html'"></div>
+            </div>
+            <div class="tab-pane" ng-class = "{active:isActive('/dashboard/owned')}" id="owned">
+                <div ng-include="src='partials/owned.html'"></div>
+            </div>
+            <div class="tab-pane" ng-class = "{active:isActive('/dashboard/review')}" id="review">
+                <div ng-include="src='partials/review.html'"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
