@@ -5,6 +5,7 @@
 angular.module('secrets.controllers', [])
     .controller('listController', ['$scope', 'parse', function($scope, parse) {
         $scope.listPage = true;
+
         parse.getList().then(function(res){
             $scope.secretsList = parse.parseList(res);
             $scope.$apply();
@@ -135,6 +136,31 @@ angular.module('secrets.controllers', [])
             image:"secret.jpg"
         };
 
+        $(".form-control").not(".category").popover({
+            animation:true,
+            title:"Examples",
+            placement:"bottom",
+            trigger:'focus',
+            html:true
+        });
+
+        var allCategories = [
+            {word: "corey"},
+            {word: "carey"}
+        ];
+        var catnames = new Bloodhound({
+            datumTokenizer: function(d) {return Bloodhound.tokenizers.whitespace(d.word)},
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: allCategories
+        });
+        catnames.initialize();
+        $('input.tagsinput').tagsinput({typeaheadjs: {
+            name: 'catnames',
+            displayKey: 'word',
+            valueKey: 'word',
+            source: catnames.ttAdapter()
+        }});
+
         if($routeParams.id){
             parse.getSecret($routeParams.id).then(function(res){
                $scope.secret = {
@@ -152,6 +178,9 @@ angular.module('secrets.controllers', [])
         }
 
         $scope.submit = function() {
+            if($scope.secret.category == "Other"){
+                $scope.secret.category = $scope.secret.otherCat;
+            }
             parse.submitSecret($scope.secret).then(function(res){
                 $scope.success = true;
             });

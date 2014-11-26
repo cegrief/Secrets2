@@ -1,13 +1,11 @@
 'use strict';
 
-
-// Declare app level module which depends on filters, and services
 angular.module('secrets', [
-  'ngRoute',
-  'secrets.filters',
-  'secrets.services',
-  'secrets.directives',
-  'secrets.controllers'
+    'ngRoute',
+    'secrets.services',
+    'secrets.directives',
+    'secrets.controllers',
+    'secrets.filters'
 ]).config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/secretPage/:id',{templateUrl: 'partials/secretPage.html', controller: 'pageController'});
     $routeProvider.when('/secretsList',{templateUrl: 'partials/secretsList.html', controller: 'listController'});

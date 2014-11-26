@@ -1,19 +1,26 @@
-<nav class = "navbar navbar-default" style = "border-radius:0px; background-color: #fcfcfc; border-bottom:1px solid #ebeae5;" role = "navigation">
+<nav class = "navbar navbar-inverse navbar-embossed" ng-class="{'navbar-fixed-top':listPage}" style = "border-radius:0px; border-bottom:1px solid #ebeae5;" role = "navigation">
     <div class = "navbar-header">
         <a class = "navbar-brand" href = "" ng-click="$root.goBack()" ng-hide="listPage"><span class = "glyphicon glyphicon-arrow-left"></span> Back</a>
         <h3 style = "margin-left:10px" class = "navbar-text" ng-show="listPage">Secrets -<small> Discover something new!</small></h3>
     </div>
     <div ng-hide="loginPage">
         <a class = "btn btn-default navbar-btn navbar-right btn-lg" style = "margin-right:20px" id = "login" href = "#/login" ng-hide="$root.currentUser">Login</a>
-        <ul class = "nav navbar-nav navbar-right" style = "margin-right:20px;" id = "completed" ng-show="$root.currentUser">
-            <li class = "dropdown">
-                <a href = "#" class = "dropdown-toggle" data-toggle ="dropdown" id="profile" tab-dir>{{$root.currentUser.get("username")}}</a>
+        <ul class = "nav navbar-nav navbar-right" style="margin-right:10px">
+            <li ng-class="{'active':listPage}">
+                <a href = "#/secretsList">Secrets List</a>
+            </li>
+            <li ng-show="$root.currentUser && !dashboardPage">
+                <a href = "#/dashboard">View your Secrets and Submissions</a>
+            </li>
+            <li ng-hide="$root.currentUser">
+                <a href = "#/login">Sign Up!</a>
+            </li>
+            <li class = "dropdown" ng-show="$root.currentUser">
+                <a href = "#" class = "dropdown-toggle" data-toggle ="dropdown" tab-dir>{{$root.currentUser.get("username")}}<span class="caret"></span></a>
                 <ul class = "dropdown-menu">
                     <li><a ng-click="$root.logout()">Logout</a></li>
                 </ul>
             </li>
         </ul>
-        <a href = "#/dashboard" class = "navbar-right btn navbar-btn btn-primary" id="known" ng-show="$root.currentUser && !dashboardPage">View your Secrets and Submissions</a>
-        <a href = "#/login"class = "navbar-right  btn btn-lg navbar-btn btn-primary" id="signup" ng-hide="$root.currentUser">Sign Up!</a>
     </div>
 </nav>
