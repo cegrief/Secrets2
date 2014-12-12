@@ -93,8 +93,11 @@ angular.module('secrets.controllers', [])
         };
 
         parse.getKnown().then(function(res){
+
+            console.log("getting known")
             $scope.knownSecrets = res;
-            $scope.$apply();
+            $scope.$apply()
+            console.log($scope.knownSecrets)
         });
 
         parse.getWant().then(function(res){

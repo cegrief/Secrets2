@@ -102,7 +102,7 @@ angular.module('secrets.services', []).
         parseFactory.getKnown = function(){
             var query = new Parse.Query(Submission);
             query.include("secretID");
-            query.equalTo("done", "done");
+            query.equalTo("done", "yes");
             query.equalTo("UserID", Parse.User.current());
             return query.find();
         };
