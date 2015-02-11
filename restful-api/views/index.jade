@@ -1,0 +1,32 @@
+doctype html
+head
+  title Secrets
+  script(src='/javascripts/lib/jquery-1.11.2.min.js')
+  script(src='//localhost:35729/livereload.js')
+  link(href='/stylesheets/bootstrap.min.css', rel='stylesheet')
+  link(href='/stylesheets/bootstrap-theme.min.css', rel='stylesheet')
+  link(href='/stylesheets/style.css', rel='stylesheet')
+html
+  body
+    h2 Tasty desert
+    p There is a secret desert item at the new dominos that the owner tells me is incredible
+    img(src='http://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Dominos_pizza_logo.svg/2000px-Dominos_pizza_logo.svg.png')#imagething
+    h4 Task:
+    p record a workout in mapmyrun
+    a.btn.btn-default(href = 'https://foursquare.com/oauth2/authenticate?client_id=15MIYO1ZBJHVKQOOJEPKR0DDL1N2BT20AETJCTU4LMF4QR2J&response_type=code&redirect_uri='+escape('http://secrets.ci.northwestern.edu')) login here
+
+    .row
+      .col-xs-4
+        h3
+          a#create.btn.btn-primary(href='javascript:') Click here when you are done!
+        p#create-response
+
+        div#success-response.hidden
+          h3 Completed!
+          p The secret item is the chocolate lava cake, ask them about it! (You'll probably get a 5 minute lecture on how good they are)
+        div#err-response.hidden
+          h3 Not Completed
+          p It doesn't look like you've completed the task... try again?
+    a#log.btn.btn-default(href = 'javascript:') dummy parse login
+
+  script(src='/javascripts/home.js')
