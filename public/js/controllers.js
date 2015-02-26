@@ -7,8 +7,7 @@ angular.module('secrets.controllers', [])
         $scope.listPage = true;
 
         parse.getList().then(function(res){
-            $scope.secretsList = parse.parseList(res);
-            $scope.$apply();
+            $scope.secretsList = parse.parseList(res.data);
         });
     }])
     .controller('pageController', ['$scope','parse','$routeParams', "mail", 'geoloc', '$location', function($scope,parse,$routeParams, mail, geoloc, $location) {
@@ -16,9 +15,8 @@ angular.module('secrets.controllers', [])
         $scope.listPage = false;
         parse.getSecret($routeParams.id).then(function(res){
             //get the secret values on the scope
-            $scope.secret = res;
+            $scope.secret = res.data;
             $scope.submission = '';
-            $scope.$apply();
 
             $scope.coordinates = {
                 latitude: geoloc.getLat(),
@@ -36,7 +34,7 @@ angular.module('secrets.controllers', [])
                     function(error){
                         console.log(error);
                     });
-            };
+            }; //TODO: fix scope submit to parse
 
 
             //TODO make this not require a jquery event handler.
@@ -136,7 +134,7 @@ angular.module('secrets.controllers', [])
     }])
     .controller('submitController', ['$scope', 'parse', '$routeParams', '$location', function($scope, parse, $routeParams, $location){
         $scope.secret = {
-            image:"secret.jpg"
+            image:"../public/image/secret.jpg" //TODO: fix the image location here
         };
 
         $(".form-control").not(".category").popover({
@@ -147,22 +145,6 @@ angular.module('secrets.controllers', [])
             html:true
         });
 
-        var allCategories = [
-            {word: "corey"},
-            {word: "carey"}
-        ];
-        var catnames = new Bloodhound({
-            datumTokenizer: function(d) {return Bloodhound.tokenizers.whitespace(d.word)},
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            local: allCategories
-        });
-        catnames.initialize();
-        $('input.tagsinput').tagsinput({typeaheadjs: {
-            name: 'catnames',
-            displayKey: 'word',
-            valueKey: 'word',
-            source: catnames.ttAdapter()
-        }});
 
         if($routeParams.id){
             parse.getSecret($routeParams.id).then(function(res){

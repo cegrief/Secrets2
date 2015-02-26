@@ -12,32 +12,42 @@ angular.module('secrets.services', []).
 
         //gets list of secrets from parse
         parseFactory.getList = function() {
-            var query = new Parse.Query(Secret);
-            return query.find();
+            return $http.get('/api/list', {});
         };
 
         parseFactory.parseList = function(results){
             var list = [];
             for(var i = 0; i<results.length; i++){
+                console.log(results[i])
                 list[i]= {
-                    id: results[i].id,
-                    category: results[i].get("Category"),
-                    title: results[i].get("Secret"),
-                    summary: results[i].get("Summary"),
-                    location: results[i].get("secretLocation"),
-                    image: results[i].get("Image"),
-                    done: results[i].get("done"),
-                    task: results[i].get("conditionForSharingWithSomeoneElse")
+                    id: results[i].objectId,
+                    category: results[i].category,
+                    title: results[i].title,
+                    summary: results[i].summary,
+                    location: results[i].location,
+                    image: results[i].image,
+                    done: results[i].completed,
+                    task: results[i].task,
+                    attempted : results[i].submissions
                 };
             }
             return list;
         };
 
-        parseFactory.getSecret = function(id){
-            var query = new Parse.Query(Secret);
-            query.include("ownerID");
-            return query.get(id, {});
+        parseFactory.submitSecret = function(secret){
+
+            return $http.post('/api/secret/', {secret:secret});
+
         };
+
+        parseFactory.getSecret = function(id){
+
+            return $http.get('/api/secret/'+id, {});
+
+        };
+
+//TODO: make everything below this line use the api
+
 
         parseFactory.submit = function(secret, submission, img, coordinates){
             //update secret count
@@ -71,25 +81,6 @@ angular.module('secrets.services', []).
 
         };
 
-        parseFactory.submitSecret = function(secret){
-
-            var sec = new Secret();
-            sec.set("objectId", secret.id);
-            sec.set("Name", $rootScope.currentUser.get("username"));
-            sec.set("Secret", secret.title);
-            sec.set("Category", secret.category);
-            sec.set("secretLocation", secret.location);
-            sec.set("Directions", secret.secret);
-            sec.set("conditionForSharingWithSomeoneElse", secret.task);
-            sec.set("Summary", secret.description);
-            sec.set("Image", secret.image);
-            sec.set("ownerID", $rootScope.currentUser);
-            sec.set("completedCount",0);
-            sec.set("count", 0);
-
-            return sec.save();
-
-        };
 
         parseFactory.login = function(user, pass){
             $http.post('/api/login/', {
@@ -101,11 +92,10 @@ angular.module('secrets.services', []).
         };
 
         parseFactory.getKnown = function(){
-            var query = new Parse.Query(Submission);
-            query.include("secretID");
-            query.equalTo("done", "yes");
-            query.equalTo("UserID", Parse.User.current());
-            return query.find();
+            $http.get('/api/known/').then(function(res){
+                console.log(res.body);
+                return res.body;
+            });
         };
 
         parseFactory.getWant = function(){
