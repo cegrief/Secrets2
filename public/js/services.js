@@ -45,6 +45,14 @@ angular.module('secrets.services', []).
             return $http.get('/api/secret/'+id, {});
 
         };
+        parseFactory.login = function(user, pass){
+            $http.post('/api/login/', {
+                username: user,
+                password: pass
+            }).then(function(res){
+                $rootScope.currentUser = res.data;
+            });
+        };
 
 //TODO: make everything below this line use the api
 
@@ -81,15 +89,6 @@ angular.module('secrets.services', []).
 
         };
 
-
-        parseFactory.login = function(user, pass){
-            $http.post('/api/login/', {
-                username: user,
-                password: pass
-            }).then(function(res){
-                $rootScope.currentUser = res.data;
-            });
-        };
 
         parseFactory.getKnown = function(){
             $http.get('/api/known/').then(function(res){

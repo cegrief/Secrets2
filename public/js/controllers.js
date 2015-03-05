@@ -16,6 +16,11 @@ angular.module('secrets.controllers', [])
         parse.getSecret($routeParams.id).then(function(res){
             //get the secret values on the scope
             $scope.secret = res.data;
+            if($scope.secret.submissions == 0){
+                $scope.secret.approval = 0
+            } else {
+                $scope.secret.approval = $scope.secret.completed / $scope.secret.submissions;
+            }
             $scope.submission = '';
 
             $scope.coordinates = {
@@ -134,7 +139,7 @@ angular.module('secrets.controllers', [])
     }])
     .controller('submitController', ['$scope', 'parse', '$routeParams', '$location', function($scope, parse, $routeParams, $location){
         $scope.secret = {
-            image:"../public/image/secret.jpg" //TODO: fix the image location here
+            image:"../img/secret.jpg" //TODO: fix the image location here
         };
 
         $(".form-control").not(".category").popover({

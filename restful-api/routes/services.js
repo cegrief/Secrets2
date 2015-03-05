@@ -7,8 +7,9 @@ Parse.initialize(APP_ID, MASTER_KEY);
 //TODO: session token table
 
 function checkUser(req, res, next){
-    var user = JSON.parse(req.cookies.user);
-    if(user!=undefined) {
+
+    if(req.cookies.user!=undefined) {
+        var user = JSON.parse(req.cookies.user);
         Parse.User.become(user.sessionToken, {
             success: function (res) {
                 console.log('logged in with sessionToken');
@@ -19,10 +20,12 @@ function checkUser(req, res, next){
             }
         });
     }
+    console.log("not logged in");
+    next();
 }
 
 module.exports = function (app) {
-    app.use(checkUser);
+    //app.use(checkUser);
     var Secret = Parse.Object.extend("secrets");
     var Submissions = Parse.Object.extend("submissions");
 
@@ -32,6 +35,8 @@ module.exports = function (app) {
 
         var mySecret = req.body.secret;
         mySecret.owner = Parse.User.current();
+        mySecret.completed = 0;
+        mySecret.submissions = 0;
         res.send(sec.save(mySecret));
     });
 
@@ -43,13 +48,11 @@ module.exports = function (app) {
     });
 
     app.get("/api/secret/:id", function(req, res){
-        console.log('get secret')
         var query = new Parse.Query(Secret);
         query.include("owner");
-        query.get(req.params.id,{success:(function(response){
-            response.attributes.username = response.get('owner').get('username');
-            res.send(response);
-        })
+        query.get(req.params.id,{}).then(function(r){
+            r.attributes.username = r.get('owner').get('username');
+            res.send(JSON.stringify(r.attributes));
         });
     });
 
@@ -78,26 +81,6 @@ module.exports = function (app) {
 
         res.send(sub.save(null,{}));
     });
-
-    /*app.post("/api/secret/", function(req,res){
-
-        console.log('submitting secret')
-        var sec = new Secret();
-        sec.set("objectId", req.body.secret.id);
-        sec.set("Name", req.body.user);
-        sec.set("Secret", req.body.secret.title);
-        sec.set("Category", req.body.secret.category);
-        sec.set("secretLocation", req.body.secret.location);
-        sec.set("Directions", req.body.secret.secret);
-        sec.set("conditionForSharingWithSomeoneElse", req.body.secret.task);
-        sec.set("Summary", req.body.secret.description);
-        sec.set("Image", req.body.secret.image);
-        sec.set("ownerID", req.body.user);
-        sec.set("completedCount",0);
-        sec.set("count", 0);
-
-        res.send(sec.save());
-    });*/
 
     app.post("/api/login/", function(req, res){
         Parse.User.logIn(req.body.username, req.body.password, {}).then(function(data) {
