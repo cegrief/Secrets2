@@ -51,35 +51,33 @@ module.exports = function (app) {
         var query = new Parse.Query(Secret);
         query.include("owner");
         query.get(req.params.id,{}).then(function(r){
+            console.log()
             r.attributes.username = r.get('owner').get('username');
-            res.send(JSON.stringify(r.attributes));
+            res.send(JSON.stringify(r));
         });
     });
 
-    //TODO:make sure the rest of these work with the parsefactory
     app.post("/api/submission/", function (req, res){
 
+        var user = JSON.parse(req.cookies.user);
+        console.log(req.body);
         var query = new Parse.Query(Secret);
-        query.get(req.body.secret.id,{
-            success:function(res){
-                res.increment("count");
-                res.save();
-            },
-            error:function(err){
-                console.log(err);
-            }
+
+        query.get(req.body.secret.objectId).then(function(r){
+            r.increment("count");
+            r.save();
+
+            var sub = new Submissions();
+            sub.set("secretId", r);
+            sub.set("status", 'ip');
+            sub.set("new", true);
+            sub.set("body", req.body.submission);
+            sub.set("image", req.body.img);
+            sub.set("user", user.objectId);
+            sub.set("secretOwner", req.body.secret.owner);
+
+            res.send(sub.save(null,{}));
         });
-
-        var sub = new Submissions();
-        sub.set("secretId", req.body.secret);
-        sub.set("status", 'ip');
-        sub.set("new", true);
-        sub.set("body", req.body.submission);
-        sub.set("image", req.body.img);
-        sub.set("userId", req.body.user);
-        sub.set("secretOwnerID", req.body.secret.get("ownerID"));
-
-        res.send(sub.save(null,{}));
     });
 
     app.post("/api/login/", function(req, res){
@@ -95,57 +93,106 @@ module.exports = function (app) {
     app.get("/api/known/", function(req, res){
         //TODO: Fix known, wanted, owned, review
         var query = new Parse.Query(Submissions);
-        query.include("secretID");
-        query.equalTo("done", "yes");
-        console.log(req.cookies.user);
-        query.equalTo("userID", req.cookies.user);
-        console.log(query.find());
-        res.send(query.find());
+        query.include("secretId");
+        query.equalTo("status", "done");
+        var user = JSON.parse(req.cookies.user);
+        query.equalTo("user", user.objectId);
+        query.find().then(function(r){
+            var results = [];
+            for(var i = 0; i< r.length; i++){
+                results[i] = r[i].attributes.secretId;
+            }
+            res.send(results);
+        });
     });
 
     app.get("/api/wanted/", function(req, res){
         var query = new Parse.Query(Submissions);
-        query.include("secretID");
-        query.equalTo("done", "ip");
-        query.equalTo("userID", req.cookies.user);
-        res.send(query.find());
+        query.include("secretId");
+        query.notEqualTo("status", "done");
+        query.equalTo("user", JSON.parse(req.cookies.user).objectId);
+        query.find().then(function(r){
+            var results = [];
+            for(var i = 0; i< r.length; i++){
+                results[i] = {
+                    submission: r[i].attributes,
+                    secret: r[i].attributes.secretId
+                };
+            }
+            res.send(results);
+        });
     });
 
     app.get("/api/owned/", function(req, res){
         var query = new Parse.Query(Secret);
-        query.equalTo("userID", req.user);
-        res.send(query.find());
+        var user = JSON.parse(req.cookies.user);
+        Parse.User.become(user.sessionToken).then(function(){
+            query.equalTo("owner", Parse.User.current());
+            query.find().then(function(r){
+                res.send(r);
+            });
+        });
     });
 
     app.get("/api/review/", function(req,res){
-        var query = new Parse.Query(Submissions);
-        query.include("userID");
-        query.equalTo("done", "ip");
-        query.equalTo("ownerID", req.user);
-        res.send(query.find());
+
+        var user = JSON.parse(req.cookies.user);
+        Parse.User.become(user.sessionToken).then(function(){
+            var query = new Parse.Query(Submissions);
+            query.equalTo("status", "ip");
+            query.include('secretId');
+            query.equalTo("secretOwner", Parse.User.current());
+            query.find().then(function(r){
+                var results = [];
+                for(var i = 0; i< r.length; i++){
+                    results[i] = {
+                        submission: r[i].attributes,
+                        secret: r[i].attributes.secretId,
+                        submissionid: r[i].id
+                    };
+                }
+                res.send(results);
+            });
+        });
+
     });
+
+    app.post("/api/submission/approve", function(req,res){
+        var query = new Parse.Query(Secret);
+        var sub = req.body.submission;
+        var upSub = new Submissions();
+
+        //TODO fix updating completed count
+        /*query.equalTo("objectId", sub.secretId);
+         query.find().then(function(res){
+         res[0].increment("completed");
+         res[0].save();
+         });*/
+        upSub.set("status", "done");
+        upSub.id = sub;
+        upSub.save().then(function(r){
+            res.send(r);
+        });
+    });
+    //TODO:make sure the rest of these work with the parsefactory
+
+
+
+
 
     app.delete("/api/secret/", function(req, res){
         res.send(req.body.secret.destroy());
     });
 
-    app.post("/api/submission/approve", function(req,res){
-        var query = new Parse.Query(Secret);
-        var sub = req.body.sub;
-        query.equalTo("objectId", sub.get("secretID").id);
-        query.find().then(function(res){
-            res[0].increment("completedCount");
-            res[0].save();
-        });
-
-        sub.set("done", "yes");
-        res.send(sub.save());
-    });
-
     app.post("/api/submission/deny", function(req,res){
-        var sub = req.body.sub;
-        sub.set('done', 'no');
-        res.send(sub.save());
+        var sub = req.body.submission;
+        var upSub = new Submissions();
+
+        upSub.set('status', 'denied');
+        upSub.id = sub;
+        upSub.save().then(function(r){
+            res.send(r);
+        });
     });
 
     app.get("/api/oauthCallback/", function(req, res){

@@ -57,67 +57,31 @@ angular.module('secrets.services', []).
 //TODO: make everything below this line use the api
 
 
-        parseFactory.submit = function(secret, submission, img, coordinates){
-            //update secret count
-            var sec = new Parse.Query(Secret);
-            sec.get(secret.id, {
-                success:function(res){
-                    res.increment("count");
-                    res.save();
-                },
-                error:function(err){
-                    console.log(err);
-                }
+        parseFactory.submit = function(secret, submission, img){
+
+            return $http.post('/api/submission/', {
+                secret: secret,
+                submission: submission,
+                image:img
             });
-
-            //make submission
-            var sub = new Submission();
-            sub.set("secretID", secret);
-            sub.set("done", "IP");
-            sub.set("new", true);
-            sub.set("submission", submission);
-            sub.set("image", img);
-            sub.set("UserID", Parse.User.current());
-            sub.set("ownerID", secret.get("ownerID"));
-            sub.set("lat", coordinates.latitude);
-            sub.set("long", coordinates.longitude);
-
-            if((Math.abs(coordinates.latitude - secret.get('lat')) < 1) &&(Math.abs(coordinates.longitude - secret.get('long')) <1)){
-                sub.set("done","done");
-            }
-            return sub.save(null, {});
 
         };
 
 
         parseFactory.getKnown = function(){
-            $http.get('/api/known/').then(function(res){
-                console.log(res.body);
-                return res.body;
-            });
+            return $http.get('/api/known/')
         };
 
         parseFactory.getWant = function(){
-            var query = new Parse.Query(Submission);
-            query.include("secretID");
-            query.equalTo("UserID", $rootScope.currentUser);
-            return query.find();
+            return $http.get('/api/wanted/')
         };
 
         parseFactory.getOwned = function(){
-            var query = new Parse.Query(Secret);
-            query.equalTo("ownerID", $rootScope.currentUser);
-            return query.find();
+            return $http.get('/api/owned')
         };
 
         parseFactory.getReview = function(){
-            console.log("asdf");
-            var query = new Parse.Query(Submission);
-            query.include("secretID");
-            query.include("UserID");
-            query.equalTo("done", "IP");
-            query.equalTo("ownerID", $rootScope.currentUser);
-            return query.find();
+            return $http.get('/api/review')
         };
 
         parseFactory.delete = function(secret){
@@ -125,21 +89,13 @@ angular.module('secrets.services', []).
         };
 
         parseFactory.approve = function(sub){
-            var query = new Parse.Query(Secret);
-            console.log(sub.get("secretID").id);
-            query.equalTo("objectId", sub.get("secretID").id);
-            query.find().then(function(res){
-                res[0].increment("completedCount");
-                res[0].save();
-            });
-
-            sub.set("done", "yes");
-            return sub.save();
+            return $http.post('/api/submission/approve',
+                {submission: sub})
         };
 
         parseFactory.deny = function(sub){
-            sub.set("done", "no");
-            return sub.save();
+            return $http.post('/api/submission/deny',
+                {submission: sub})
         };
 
         return parseFactory;

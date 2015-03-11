@@ -9,13 +9,13 @@
     </thead>
     <tbody>
     <tr ng-repeat="secret in submissions">
-        <td>{{secret.get('secretID').get('Secret')}}</td>
-        <td>{{secret.get('secretID').get('conditionForSharingWithSomeoneElse')}}</td>
-        <td>{{secret.get('submission')}}</td>
-        <td><img ng-src="{{secret.get('image')}}"></td>
+        <td>{{secret.secret.title}}</td>
+        <td>{{secret.secret.task}}</td>
+        <td>{{secret.submission.body}}</td>
+        <td><img ng-src="{{secret.image}}"></td>
         <td>
-            <button class="btn btn-primary col-xs-3" ng-click="approve(secret)">Approve</button>
-            <button class="btn btn-danger col-xs-3" ng-click="deny(secret)">Deny</button>
+            <button class="btn btn-primary col-xs-3" ng-click="approve(secret.submissionid)">Approve</button>
+            <button class="btn btn-danger col-xs-3" ng-click="deny(secret.submissionid)">Deny</button>
         </td>
     </tr>
     </tbody>

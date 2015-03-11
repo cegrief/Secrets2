@@ -10,30 +10,23 @@ angular.module('secrets.controllers', [])
             $scope.secretsList = parse.parseList(res.data);
         });
     }])
-    .controller('pageController', ['$scope','parse','$routeParams', "mail", 'geoloc', '$location', function($scope,parse,$routeParams, mail, geoloc, $location) {
+    .controller('pageController', ['$scope','parse', '$rootScope','$routeParams', "mail", 'geoloc', '$location', function($scope,parse, $rootScope,$routeParams, mail, geoloc, $location) {
 
         $scope.listPage = false;
         parse.getSecret($routeParams.id).then(function(res){
             //get the secret values on the scope
             $scope.secret = res.data;
-            if($scope.secret.submissions == 0){
-                $scope.secret.approval = 0
+            if($scope.secret.count == 0){
+                $scope.approval = 0
             } else {
-                $scope.secret.approval = $scope.secret.completed / $scope.secret.submissions;
+                $scope.approval = $scope.secret.completed / $scope.secret.count;
             }
             $scope.submission = '';
 
-            $scope.coordinates = {
-                latitude: geoloc.getLat(),
-                longitude: geoloc.getLong()
-            };
-
             //submits image and submission to parse
             $scope.submit = function() {
-                parse.submit($scope.secret, $scope.submission, $scope.image, $scope.coordinates).then(function(res){
-                        //send email to owner
-                        mail.submit($scope.secret.get("ownerID"), "submit");
-                        //TODO redirect page to list with success message
+                parse.submit($scope.secret, $scope.submission, $scope.image).then(function(res){
+                        $rootScope.subsuccess = true;
                         $location.path("/secretsList")
                     },
                     function(error){
@@ -96,20 +89,15 @@ angular.module('secrets.controllers', [])
         };
 
         parse.getKnown().then(function(res){
-
-            console.log("getting known")
-            $scope.knownSecrets = res;
-            $scope.$apply()
-            console.log($scope.knownSecrets)
+            $scope.knownSecrets = res.data;
         });
 
         parse.getWant().then(function(res){
-            $scope.wantedSecrets = res;
-            $scope.$apply();
+            $scope.wantedSecrets = res.data;
         });
 
         parse.getOwned().then(function(res){
-            $scope.ownedSecrets = res;
+            $scope.ownedSecrets = res.data;
             $scope.edit = function(id){
                 $location.path('/submit/'+id);
             };
@@ -118,11 +106,11 @@ angular.module('secrets.controllers', [])
                 parse.delete(secret);
                 $route.reload()
             };
-            $scope.$apply();
         });
 
         parse.getReview().then(function(res) {
-            $scope.submissions = res;
+            $scope.submissions = res.data;
+            console.log(res.data);
             $scope.approve = function (sub) {
                 parse.approve(sub).then(function (res) {
                     $scope.approve = true;
@@ -134,7 +122,6 @@ angular.module('secrets.controllers', [])
                     $scope.deny = true;
                 });
             };
-            $scope.$apply();
         });
     }])
     .controller('submitController', ['$scope', 'parse', '$routeParams', '$location', function($scope, parse, $routeParams, $location){

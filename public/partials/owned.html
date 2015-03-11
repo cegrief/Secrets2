@@ -1,19 +1,19 @@
 <ul ng-repeat="secret in ownedSecrets">
     <li class="col-xs-4 secret">
-        <a onclick="" href="#/secretPage/{{secret.id}}" class="thumbnail">
-            <div class="imagecontainer"><img ng-src="{{secret.get('Image')}}"></div>
+        <a onclick="" href="#/secretPage/{{secret.objectId}}" class="thumbnail tile">
+            <div class="imagecontainer"><img ng-src="{{secret.image}}"></div>
             <div class="caption">
-                <span class="title">{{ secret.get("Secret") }}</span>
+                <span class="title">{{ secret.title }}</span>
                 <hr>
-                <span><b>Summary: </b>{{ secret.get("Summary") }} </span>
+                <span><b>Summary: </b>{{ secret.description }} </span>
                 <hr>
-                <span><b>Task: </b>{{ secret.get("conditionForSharingWithSomeoneElse") }}</span>
+                <span><b>Task: </b>{{ secret.task }}</span>
                 <hr>
-                <span><b>Submissions: </b>{{ secret.get("count") }} ({{secret.get("completedCount")}} approved)</span>
+                <span><b>Submissions: </b>{{ secret.count }} ({{secret.completed}} approved)</span>
             </div>
         </a>
-        <button class="btn btn-default col-xs-6" style="margin-top:-20px" ng-click="edit(secret.id)">Edit</button>
-        <button class="btn btn-danger col-xs-6" style="margin-top:-20px" ng-click="delete(secret)">Delete</button>
+        <button class="btn btn-default col-xs-6" style="margin-top:-20px" ng-click="edit(secret.objectId)">Edit</button>
+        <button class="btn btn-danger col-xs-6" style="margin-top:-20px" ng-click="delete(secret.objectId)">Delete</button>
     </li>
 
 </ul>
@@ -23,12 +23,12 @@
     </thead>
     <tbody>
     <tr ng-repeat="secret in ownedSecrets">
-        <td>{{secret.get('Secret')}}</td>
-        <td>{{secret.get('secretLocation')}}</td>
-        <td>{{secret.get('Category')}}</td>
-        <td>{{secret.get('conditionForSharingWithSomeoneElse')}}</td>
-        <td><img ng-src="{{secret.get('image')}}"></td>
-        <td>{{secret.get('feedback')}}</td>
+        <td>{{secret.secret}}</td>
+        <td>{{secret.location}}</td>
+        <td>{{secret.category}}</td>
+        <td>{{secret.task}}</td>
+        <td><img ng-src="{{secret.image}}"></td>
+        <td>{{secret.feedback}}</td>
     </tr>
     </tbody>
 </table>

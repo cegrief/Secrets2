@@ -4,11 +4,11 @@
     </thead>
     <tbody>
     <tr ng-repeat="secret in wantedSecrets">
-        <td>{{secret.get('done')}}</td>
-        <td>{{secret.get('secretID').get('Secret')}}</td>
-        <td>{{secret.get('submission')}}</td>
-        <td><img ng-src="{{secret.get('image')}}"></td>
-        <td>{{secret.get('feedback')}}</td>
+        <td>{{secret.submission.status}}</td>
+        <td>{{secret.secret.title}}</td>
+        <td>{{secret.submission.body}}</td>
+        <td><img ng-src="{{secret.submission.image}}"></td>
+        <td>{{secret.submission.feedback}}</td>
     </tr>
     </tbody>
 </table>

@@ -5,9 +5,9 @@
     </thead>
     <tbody>
     <tr ng-repeat="secret in knownSecrets">
-        <td>{{secret.get('secretID').get('Secret')}}</td>
-        <td>{{secret.get('secretID').get('secretLocation')}}</td>
-        <td>{{secret.get('secretID').get('Directions')}}</td>
+        <td>{{secret.title}}</td>
+        <td>{{secret.location}}</td>
+        <td>{{secret.secret}}</td>
     </tr>
     </tbody>
 </table>
