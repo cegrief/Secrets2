@@ -205,10 +205,9 @@ module.exports = function (app) {
             + '&grant_type=authorization_code'
             + '&redirect_uri=http://secrets.ci.northwestern.edu/api/4squareCode'
             + '&code=' + req.query.code, function(e, r, b){
-                console.log(b);
-                //var sub = new Tokens();
-                //sub.set('4square', r.body.access_token);
-                //sub.save()
+                var sub = new Tokens();
+                sub.set('4square', r.body.access_token);
+                sub.save()
         });
     });
 
