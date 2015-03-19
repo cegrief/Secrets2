@@ -1,5 +1,6 @@
 var Parse = require('parse').Parse;
 var http = require('https');
+var request = require('request');
 
 var APP_ID = 'fp7oxuptKJ9ysesuXOeV4Ieul8ErSZklVwRslkJW';
 var MASTER_KEY = 'HLpukqho21z1LaL7dUrPMRWI0jAu38NqmmL9qIfo';
@@ -198,16 +199,16 @@ module.exports = function (app) {
 
     app.get("/api/4squareCode/", function(req, res){
         console.log(req.query.code);
-        http.get('https://foursquare.com/oauth2/access_token'
+        request('https://foursquare.com/oauth2/access_token'
             + '?client_id=15MIYO1ZBJHVKQOOJEPKR0DDL1N2BT20AETJCTU4LMF4QR2J'
             + '&client_secret=31SV4VGK5K5AHQIMTW1B0YVANQYMIEQA4ICVMB5EDIWOYKRA'
             + 'grant_type=authorization_code'
         + '&redirect_uri=secrets.ci.northwestern.edu/api/4squareCode'
-        + '&code=' + req.query.code).then(function(r){
-            console.log(res.body)
-            var sub = new Tokens();
-            sub.set('4square', res.body.access_token);
-            sub.save()
+        + '&code=' + req.query.code, function(e, r, b){
+            console.log(b);
+            //var sub = new Tokens();
+            //sub.set('4square', r.body.access_token);
+            //sub.save()
         });
     });
 
