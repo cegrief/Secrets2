@@ -28,6 +28,7 @@ module.exports = function (app) {
     //app.use(checkUser);
     var Secret = Parse.Object.extend("secrets");
     var Submissions = Parse.Object.extend("submissions");
+    var Tokens = Parse.Object.extend("tokens");
 
     app.post("/api/secret/", function (req, res){
         console.log('submitting secret');
@@ -195,25 +196,19 @@ module.exports = function (app) {
         });
     });
 
-    app.get("/api/oauthCallback/", function(req, res){
-
-
-        var req = http.get('https://foursquare.com/oauth2/access_token?client_id=15MIYO1ZBJHVKQOOJEPKR0DDL1N2BT20AETJCTU4LMF4QR2J'+
-        '&client_secret=31SV4VGK5K5AHQIMTW1B0YVANQYMIEQA4ICVMB5EDIWOYKRA'+
-        '&grant_type=authorization_code'+
-        '&redirect_uri='+escape('http://secrets.ci.northwestern.edu')+
-        '&code=' + req.body.code, function(res){
-            console.log('res: '+res.body);
-        }).on('error', function(e){
-            console.log('got error: ' + e.mesage);
+    app.get("/api/4squareCode/", function(req, res){
+        console.log(req.query.code);
+        http.get('https://foursquare.com/oauth2/access_token'
+            + '?client_id=15MIYO1ZBJHVKQOOJEPKR0DDL1N2BT20AETJCTU4LMF4QR2J'
+            + '&client_secret=31SV4VGK5K5AHQIMTW1B0YVANQYMIEQA4ICVMB5EDIWOYKRA'
+            + 'grant_type=authorization_code'
+        + '&redirect_uri=secrets.ci.northwestern.edu/api/4squareCode'
+        + '&code=' + req.query.code).then(function(r){
+            console.log(res.body)
+            var sub = new Tokens();
+            sub.set('4square', res.body.access_token);
+            sub.save()
         });
-
-
-        //store auth token in authToken table
-
-        //wait and say if error or success
-
-        //redirect
-    })
+    });
 
 };
