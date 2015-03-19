@@ -202,13 +202,13 @@ module.exports = function (app) {
         request('https://foursquare.com/oauth2/access_token'
             + '?client_id=15MIYO1ZBJHVKQOOJEPKR0DDL1N2BT20AETJCTU4LMF4QR2J'
             + '&client_secret=31SV4VGK5K5AHQIMTW1B0YVANQYMIEQA4ICVMB5EDIWOYKRA'
-            + 'grant_type=authorization_code'
-        + '&redirect_uri=secrets.ci.northwestern.edu/api/4squareCode'
-        + '&code=' + req.query.code, function(e, r, b){
-            console.log(b);
-            //var sub = new Tokens();
-            //sub.set('4square', r.body.access_token);
-            //sub.save()
+            + '&grant_type=authorization_code'
+            + '&redirect_uri=http://secrets.ci.northwestern.edu/api/4squareCode'
+            + '&code=' + req.query.code, function(e, r, b){
+                console.log(b);
+                //var sub = new Tokens();
+                //sub.set('4square', r.body.access_token);
+                //sub.save()
         });
     });
 
